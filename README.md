@@ -1,1 +1,2 @@
-My work for midterm exam in app dev
+- My work for midterm exam in app dev (Midterm Exam Activity)
+- Sanitizing Inputs (Finals 1st Activity) | 11/09/2026 |
