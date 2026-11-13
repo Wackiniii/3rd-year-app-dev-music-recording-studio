@@ -61,15 +61,15 @@ if (!isset($_SESSION['user_id'])) {
 	  <?php $getAllAlbum = getAllAlbum($pdo); ?>
 	  <?php foreach ($getAllAlbum as $row) { ?>
 	  <tr>
-	  	<td><?php echo $row['album_id']; ?></td>	  	
-	  	<td><?php echo $row['album_name']; ?></td>	  	
-		<td><?php echo $row['artist_name']; ?></td>	  	
-	  	<td><?php echo $row['producer_name']; ?></td>	  	
-	  	<td><?php echo $row['status']; ?></td>
-		<td><?php echo $row['release_date']; ?></td>	 
-		<td><?php echo $row['added_by']; ?></td>	 
-		<td><?php echo $row['last_modified_by']; ?></td> 	
-	  	<td><?php echo $row['date_added']; ?></td>
+	  	<td><?php echo htmlspecialchars($row['album_id'], ENT_QUOTES, 'UTF-8'); ?></td>	  	
+	  	<td><?php echo htmlspecialchars($row['album_name'], ENT_QUOTES, 'UTF-8'); ?></td>	  	
+		<td><?php echo htmlspecialchars($row['artist_name'], ENT_QUOTES, 'UTF-8'); ?></td>	  	
+	  	<td><?php echo htmlspecialchars($row['producer_name'], ENT_QUOTES, 'UTF-8'); ?></td>	  	
+	  	<td><?php echo htmlspecialchars($row['status'], ENT_QUOTES, 'UTF-8'); ?></td>
+		<td><?php echo htmlspecialchars($row['release_date'], ENT_QUOTES, 'UTF-8'); ?></td>	 
+		<td><?php echo htmlspecialchars($row['added_by'], ENT_QUOTES, 'UTF-8'); ?></td>	 
+		<td><?php echo htmlspecialchars($row['last_modified_by'], ENT_QUOTES, 'UTF-8'); ?></td> 	
+	  	<td><?php echo htmlspecialchars($row['date_added'], ENT_QUOTES, 'UTF-8'); ?></td>
 	  	<td>
 	  		<a href="viewTracks.php?album_id=<?php echo $row['album_id']; ?>">View Tracks</a>
 			<a href="editAlbum.php?album_id=<?php echo $row['album_id']; ?>">Edit</a>

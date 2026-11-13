@@ -63,18 +63,18 @@ require_once 'core/handleForms.php';
 	  <?php $getTrackByAlbum = getTracksByAlbum($pdo, $_GET['album_id']); ?>
 	  <?php foreach ($getTrackByAlbum as $row) { ?>
 	  <tr>
-	  	<td><?php echo $row['track_id']; ?></td>	  	
-	  	<td><?php echo $row['track_name']; ?></td>	  	
-	  	<td><?php echo $row['genre']; ?></td>	  	
-	  	<td><?php echo $row['duration_seconds']; ?></td>
-		<td><?php echo $row['bpm']; ?></td>	 
-		<td><?php echo $row['key_signature']; ?></td>	 
-		<td><?php echo $row['time_signature']; ?></td>
-		<td><?php echo $row['artist_name']; ?></td>	 
-		<td><?php echo $row['producer_name']; ?></td>	 	 	 
-		<td><?php echo $row['added_by']; ?></td>
-		<td><?php echo $row['last_modified_by']; ?></td> 	
-	  	<td><?php echo $row['date_added']; ?></td>
+	  	<td><?php echo htmlspecialchars($row['track_id'], ENT_QUOTES, 'UTF-8'); ?></td>	  	
+	  	<td><?php echo htmlspecialchars($row['track_name'], ENT_QUOTES, 'UTF-8'); ?></td>	  	
+	  	<td><?php echo htmlspecialchars($row['genre'], ENT_QUOTES, 'UTF-8'); ?></td>	  	
+	  	<td><?php echo htmlspecialchars($row['duration_seconds'], ENT_QUOTES, 'UTF-8'); ?></td>
+		<td><?php echo htmlspecialchars($row['bpm'], ENT_QUOTES, 'UTF-8'); ?></td>	 
+		<td><?php echo htmlspecialchars($row['key_signature'], ENT_QUOTES, 'UTF-8'); ?></td>	 
+		<td><?php echo htmlspecialchars($row['time_signature'], ENT_QUOTES, 'UTF-8'); ?></td>
+		<td><?php echo htmlspecialchars($row['artist_name'], ENT_QUOTES, 'UTF-8'); ?></td>	 
+		<td><?php echo htmlspecialchars($row['producer_name'], ENT_QUOTES, 'UTF-8'); ?></td>	 	 	 
+		<td><?php echo htmlspecialchars($row['added_by'], ENT_QUOTES, 'UTF-8'); ?></td>
+		<td><?php echo htmlspecialchars($row['last_modified_by'], ENT_QUOTES, 'UTF-8'); ?></td> 	
+	  	<td><?php echo htmlspecialchars($row['date_added'], ENT_QUOTES, 'UTF-8'); ?></td>
 	  	<td>
 	  		<a href="editTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Edit</a>
 	  		<a href="deleteTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Delete</a>
