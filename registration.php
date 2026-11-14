@@ -39,7 +39,7 @@ require_once 'core/handleForms.php';
 		</p>
         <p>
             <label for="confirm_password">Confirm Password</label>
-			<input type="confirm_password" name="confirm_password" id="confirm_password">  
+			<input type="password" name="confirm_password" id="confirm_password">  
         </p>
         <p>
             <input type="submit" name="registerBtn">
