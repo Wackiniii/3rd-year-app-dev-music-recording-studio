@@ -40,6 +40,7 @@ require_once 'core/handleForms.php';
         <p>
             <label for="confirm_password">Confirm Password</label>
 			<input type="password" name="confirm_password" id="confirm_password">  
+			<button type="button" id="toggle" aria-pressed="false">Show</button>   
         </p>
         <p>
             <input type="submit" name="registerBtn">
@@ -49,10 +50,25 @@ require_once 'core/handleForms.php';
         unset($_SESSION['old']); 
         ?>
 	</form>
-    <p>Already have an account?<a href="login.php"> Login Account</a></p>
+    
+	<p>Already have an account?<a href="login.php"> Login Account</a></p>
 
     <?php if (isset($_SESSION['message'])) { ?>
 		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
 	<?php } unset($_SESSION['message']); ?>
 </body>
+
+<script>
+    const passwordInput = document.getElementById('password');
+	const confirmInput = document.getElementById('confirm_password');
+    const btn   = document.getElementById('toggle');
+	
+    btn.addEventListener('click', () => {
+		const show = passwordInput.type === 'password';
+		passwordInput.type = show ? 'text' : 'password';
+		confirmInput.type = show ? 'text' : 'password';
+		btn.textContent = show ? 'Hide' : 'Show';
+		btn.setAttribute('aria-pressed', show);
+    });   
+</script>
 </html>
