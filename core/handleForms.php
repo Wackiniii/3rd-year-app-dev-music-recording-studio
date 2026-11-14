@@ -3,23 +3,70 @@
 session_start();
 require_once 'dbConfig.php'; 
 require_once 'models.php';
+require_once 'validation.php';
 
 if (isset($_POST['registerBtn'])) {
-	$query = registerUser($pdo, $_POST['username'], $_POST['password'], 
-		$_POST['first_name'], $_POST['last_name'], $_POST['birth_date'], $_POST['gender']);
-	if ($query) {
-		header("Location: ../login.php");
+	$username = sanitizeInput($_POST['username']);
+	$password = $_POST['password'];
+	$confirm_password = $_POST['confirm_password'];
+	$first_name = sanitizeInput($_POST['first_name']);
+	$last_name = sanitizeInput($_POST['last_name']);
+	$birth_date = sanitizeInput($_POST['birth_date']);
+	$gender = sanitizeInput($_POST['gender']);
+
+	$_SESSION['old'] = [
+        'username'   => $username,
+        'first_name' => $first_name,
+        'last_name'  => $last_name,
+        'birth_date' => $birth_date,
+        'gender'     => $gender
+    ];
+
+	if (empty($username) || empty($password) || empty($confirm_password) 
+		|| empty($first_name) || empty($last_name) || empty($birth_date) 
+		|| empty($gender)) {
+			$_SESSION['message'] = "Please make sure the input fields 
+			are not empty for registration!";
+			header("Location: ../registration.php");
+			exit;
+	}
+	if ($password !== $confirm_password) {
+		$_SESSION['message'] = "Please check if both passwords are equal!";
+		header("Location: ../registration.php");
 		exit;
 	}
-	else {
-		$_SESSION['message'] = "Please fill up the input fields";
-		header("Location: ../login.php");
-	exit;
-}
+	if (validatePassword($password)) {
+		$query = registerUser($pdo, $username, $password, $first_name,
+		$last_name, $birth_date, $gender);
+
+		if ($query) {
+			unset($_SESSION['old']);
+			header("Location: ../login.php");
+			exit;
+		}
+		else {
+			header("Location: ../registration.php");
+			exit;
+		}
+	} else {
+		$_SESSION['message'] = "Password should be more than 8 characters and should contain both uppercase, lowercase, and numbers";
+		header("Location: ../registration.php");
+		exit;
+	}
 } 
 
 if (isset($_POST['loginBtn'])) {
-    $query = loginUser($pdo, $_POST['username'], $_POST['password']);
+
+	$username = sanitizeInput($_POST['username']);
+	$password = $_POST['password'];	
+
+	if (empty($username) && empty($password)) {
+		$_SESSION['message'] = "Please make sure the input fields 
+		are not empty for the login!";
+		header("Location: ../login.php");
+	}
+	
+    $query = loginUser($pdo, $username, $password);
     if ($query) {
         $_SESSION['user_id'] = $query;
         header("Location: ../index.php");
