@@ -1,5 +1,20 @@
 <?php  
 function registerUser($pdo , $username, $password, $first_name, $last_name, $birth_date, $gender) {
+	$username = trim((string)$username);
+	$first_name = trim((string)$first_name);
+	$last_name = trim((string)$last_name);
+	$birth_date = trim((string)$birth_date);
+	$gender = trim((string)$gender);
+
+	$checkUserSql = "SELECT * FROM users WHERE username = ?";
+	$checkUserStmt = $pdo->prepare($checkUserSql);
+	$checkUserStmt->execute([$username]);
+
+	if ($checkUserStmt->fetch()) {
+		$_SESSION['message'] = "Username is already taken.";
+		return false;
+	}
+
 	$hashed_password = password_hash($password, PASSWORD_ARGON2ID);
 
 	$sql = "INSERT INTO users (username, password, first_name, last_name, birth_date, gender) 
@@ -17,24 +32,23 @@ function registerUser($pdo , $username, $password, $first_name, $last_name, $bir
 function loginUser($pdo , $username, $password) {
 	$sql = "SELECT * FROM users WHERE username=?";
 	$stmt = $pdo->prepare($sql);
-	$executeQuery = $stmt->execute([$username]);
+	$executeQuery = $stmt->execute([trim((string)$username)]);
 
-	if ($stmt->rowCount() > 0) {
-		$user = $stmt->fetch();
-		if (password_verify($password, $user['password'])) {
-            return $user['user_id'];
-        }
-	}
-	return false;
+	$user = $stmt->fetch();
+	if ($user && password_verify($password, $user['password'])) {
+        return $user['user_id'];
+    }
+    return false;
 }
 
+// ===================================================================================
 function insertAlbum($pdo, $album_name, $artist_name, $producer_name, 
 	$status, $release_date, $added_by) {
 
-    if (trim($status) === '') {
+    if (trim((string)$status) === '') {
         $status = 'Recording';
     }
-    if (trim($release_date) === '') {
+    if (trim((string)$release_date) === '') {
         $release_date = null;
     }
 
@@ -50,15 +64,13 @@ function insertAlbum($pdo, $album_name, $artist_name, $producer_name,
 	}
 }
 
-
-
 function updateAlbum($pdo, $album_name, $artist_name, $producer_name, 
 	$status, $release_date, $last_modified_by, $album_id) {
 
-	if (trim($status) === '') {
+	if (trim((string)$status) === '') {
         $status = 'Recording';
     }
-    if (trim($release_date) === '') {
+    if (trim((string)$release_date) === '') {
         $release_date = null;
     }
 
@@ -91,20 +103,21 @@ function deleteAlbum($pdo, $album_id) {
 			return true;
 		}
 }
+// ===================================================================================
 
 function insertTrack($pdo, $track_name, $genre, $duration_seconds, 
                     $bpm, $key_signature, $time_signature, $added_by, $album_id) {
 
-    if (trim($duration_seconds) === '') {
+    if (trim((string)$duration_seconds) === '') {
         $duration_seconds = null;
     }
-    if (trim($bpm) === '') {
+    if (trim((string)$bpm) === '') {
         $bpm = null;
     }
-	if (trim($key_signature) === '') {
+	if (trim((string)$key_signature) === '') {
         $key_signature = null;
     }
-	if (trim($time_signature) === '') {
+	if (trim((string)$time_signature) === '') {
 		$time_signature = null;
 	}
 	
@@ -121,6 +134,19 @@ function insertTrack($pdo, $track_name, $genre, $duration_seconds,
 
 function updateTrack($pdo, $track_name, $genre, $duration_seconds, 
                     $bpm, $key_signature, $time_signature, $last_modified_by, $track_id) {
+	if (trim((string)$duration_seconds) === '') {
+        $duration_seconds = null;
+    }
+    if (trim((string)$bpm) === '') {
+        $bpm = null;
+    }
+	if (trim((string)$key_signature) === '') {
+        $key_signature = null;
+    }
+	if (trim((string)$time_signature) === '') {
+		$time_signature = null;
+	}
+
 	$sql = "UPDATE track
 			SET track_name = ?,
 				genre = ?,
@@ -149,6 +175,7 @@ function deleteTrack($pdo, $track_id) {
 	}
 }
 
+// ===================================================================================
 
 function getAllAlbum($pdo) {
 	$sql = "SELECT 
@@ -185,6 +212,8 @@ function getAlbumByID($pdo, $album_id) {
 		return $stmt->fetch();
 	}
 }
+
+// ===================================================================================
 
 function getTracksByAlbum($pdo, $album_id) {
 	

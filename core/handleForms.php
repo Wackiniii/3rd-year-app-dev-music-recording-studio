@@ -85,10 +85,23 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
+// ===================================================================================
+
 if (isset($_POST['insertAlbumBtn'])) {
+	$album_name = sanitizeInput($_POST['album_name']);
+	$artist_name = sanitizeInput($_POST['artist_name']);
+	$producer_name = sanitizeInput($_POST['producer_name']);
+	$status = sanitizeInput($_POST['status']);
+	$release_date = sanitizeInput($_POST['release_date']);
+
+	if (empty($album_name) || empty($artist_name) || empty($producer_name)) {
+		$_SESSION['message'] = "Make sure input fields containing * are not empty!";
+		header("Location: ../index.php");
+		exit;
+	} 
+
 	$added_by = $_SESSION['user_id'];
-	$query = insertAlbum($pdo, $_POST['album_name'], $_POST['artist_name'], 
-		$_POST['producer_name'], $_POST['status'], $_POST['release_date'], $added_by);
+	$query = insertAlbum($pdo, $album_name, $artist_name, $producer_name, $status, $release_date, $added_by);
 
 	if ($query) {
 		header("Location: ../index.php");
@@ -97,13 +110,23 @@ if (isset($_POST['insertAlbumBtn'])) {
 	else {
 		echo "Insertion failed";
 	}
-
 }
 
 if (isset($_POST['editAlbumBtn'])) {
+	$album_name = sanitizeInput($_POST['album_name']);
+	$artist_name = sanitizeInput($_POST['artist_name']);
+	$producer_name = sanitizeInput($_POST['producer_name']);
+	$status = sanitizeInput($_POST['status']);
+	$release_date = sanitizeInput($_POST['release_date']);
+
+	if (empty($album_name) || empty($artist_name) || empty($producer_name)) {
+		$_SESSION['message'] = "Make sure input fields containing * are not empty!";
+		header("Location: ../index.php");
+		exit;
+	} 
+
 	$last_modified_by = $_SESSION['user_id'];
-	$query = updateAlbum($pdo, $_POST['album_name'], $_POST['artist_name'], 
-		$_POST['producer_name'], $_POST['status'], $_POST['release_date'], 
+	$query = updateAlbum($pdo, $album_name, $artist_name, $producer_name, $status, $release_date, 
 		$last_modified_by, $_GET['album_id']);
 
 	if ($query) {
@@ -130,12 +153,25 @@ if (isset($_POST['deleteAlbumBtn'])) {
 	}
 }
 
+// ===================================================================================
+
 if (isset($_POST['insertNewTrackBtn'])) {
+	$track_name = sanitizeInput($_POST['track_name']);
+	$genre = sanitizeInput($_POST['genre']);
+	$duration_seconds = sanitizeInput($_POST['duration_seconds']);
+	$bpm = sanitizeInput($_POST['bpm']);
+	$key_signature = sanitizeInput($_POST['key_signature']);
+	$time_signature = sanitizeInput($_POST['time_signature']);
+
+	if (empty($track_name) || empty($genre)) {
+		$_SESSION['message'] = "Make sure input fields containing * are not empty!";
+		header("Location: ../viewTracks.php?album_id=" .$_GET['album_id']);
+		exit;
+	} 
+	
 	$added_by = $_SESSION['user_id'];
-	$query = insertTrack($pdo, $_POST['track_name'], 
-            $_POST['genre'], $_POST['duration_seconds'] ,
-            $_POST['bpm'], $_POST['key_signature'], 
-            $_POST['time_signature'], $added_by, $_GET['album_id']);
+	$query = insertTrack($pdo, $track_name, $genre, $duration_seconds,
+			$bpm, $key_signature, $time_signature, $added_by, $_GET['album_id']);
 
 	if ($query) {
 		header("Location: ../viewTracks.php?album_id=" .$_GET['album_id']);
@@ -147,6 +183,19 @@ if (isset($_POST['insertNewTrackBtn'])) {
 }
 
 if (isset($_POST['editTrackBtn'])) {
+	$track_name = sanitizeInput($_POST['track_name']);
+	$genre = sanitizeInput($_POST['genre']);
+	$duration_seconds = sanitizeInput($_POST['duration_seconds']);
+	$bpm = sanitizeInput($_POST['bpm']);
+	$key_signature = sanitizeInput($_POST['key_signature']);
+	$time_signature = sanitizeInput($_POST['time_signature']);
+
+	if (empty($track_name) || empty($genre)) {
+		$_SESSION['message'] = "Make sure input fields containing * are not empty!";
+		header("Location: ../viewTracks.php?album_id=" .$_GET['album_id']);
+		exit;
+	} 
+
 	$last_modified_by = $_SESSION['user_id'];
 	$query = updateTrack($pdo, $_POST['track_name'], $_POST['genre'], 
             $_POST['duration_seconds'], $_POST['bpm'], $_POST['key_signature'], 

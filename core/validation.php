@@ -1,5 +1,4 @@
 <?php  
-
 function validatePassword($password) {
 
 	if (strlen($password) > 8) {
