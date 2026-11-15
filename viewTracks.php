@@ -17,16 +17,16 @@ require_once 'core/handleForms.php';
 	<h1>Add New Track</h1>
 	<form action="core/handleForms.php?album_id=<?php echo $_GET['album_id']; ?>" method="POST">
 		<p>
-			<label for="track_name">Track Name</label> 
-			<input type="text" name="track_name" required>
+			<label for="track_name">Track Name*</label> 
+			<input type="text" name="track_name">
 		</p>
 		<p>
-			<label for="genre">Genre</label> 
-			<input type="text" name="genre" required>
+			<label for="genre">Genre*</label> 
+			<input type="text" name="genre">
 		</p>
 		<p>
 			<label for="duration_seconds">Duration In Seconds</label> 
-			<input type="number" name="duration_seconds" required>
+			<input type="number" name="duration_seconds">
 		</p>
 		<p>
 			<label for="bpm">BPM</label> 
@@ -38,11 +38,16 @@ require_once 'core/handleForms.php';
 		</p>
 		<p>
 			<label for="time_signature">Time Signature</label> 
-			<input type="text" name="time_Signature">
+			<input type="text" name="time_signature">
 			<input type="submit" name="insertNewTrackBtn">
 			<input type="reset" value="Reset">
 		</p>
 	</form>
+
+	
+	<?php if (isset($_SESSION['message'])) { ?>
+		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
+	<?php } unset($_SESSION['message']); ?>
 
 	<table style="width:100%; margin-top: 50px;">
 	  <tr>

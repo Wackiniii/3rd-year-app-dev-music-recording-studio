@@ -22,16 +22,16 @@ if (!isset($_SESSION['user_id'])) {
     <p>Insert the following table: </p>
 	<form action="core/handleForms.php" method="POST">
 		<p>
-			<label for="album_name">Album Name</label> 
-			<input type="text" name="album_name" required>
+			<label for="album_name">Album Name*</label> 
+			<input type="text" name="album_name">
 		</p>
 		<p>
-			<label for="artist_name">Artist Name</label> 
-			<input type="text" name="artist_name" required>
+			<label for="artist_name">Artist Name*</label> 
+			<input type="text" name="artist_name">
 		</p>
 		<p>
-			<label for="producer_name">Producer Name</label> 
-			<input type="text" name="producer_name" required>
+			<label for="producer_name">Producer Name*</label> 
+			<input type="text" name="producer_name">
 		</p>
 		<p>
 			<label for="status">Status</label> 
@@ -44,6 +44,10 @@ if (!isset($_SESSION['user_id'])) {
 			<input type="reset" value="Reset">
 		</p>
 	</form>
+
+	<?php if (isset($_SESSION['message'])) { ?>
+		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
+	<?php } unset($_SESSION['message']); ?>
 
 		<table style="width:100%; margin-top: 50px;">
 	  <tr>
@@ -78,5 +82,7 @@ if (!isset($_SESSION['user_id'])) {
 	  </tr>
 	<?php } ?>
 	</table>
+
+
 </body>
 </html>

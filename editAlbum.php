@@ -15,15 +15,15 @@ require_once 'core/handleForms.php';
 	<h1>Edit the Album:</h1>
 	<form action="core/handleForms.php?album_id=<?php echo $_GET['album_id']; ?>" method="POST">
 		<p>
-			<label for="album_name">Album Name</label> 
+			<label for="album_name">Album Name*</label> 
 			<input type="text" name="album_name" value="<?php echo $getAlbumByID['album_name']; ?>">
 		</p>
 		<p>
-			<label for="artist_name">Artist Name</label> 
+			<label for="artist_name">Artist Name*</label> 
 			<input type="text" name="artist_name" value="<?php echo $getAlbumByID['artist_name']; ?>">
 		</p>
 		<p>
-			<label for="producer_name">Producer Name</label> 
+			<label for="producer_name">Producer Name*</label> 
 			<input type="text" name="producer_name" value="<?php echo $getAlbumByID['producer_name']; ?>">
 		</p>
         <p>
@@ -40,5 +40,9 @@ require_once 'core/handleForms.php';
 			<input type="reset" value="Reset">
 		</p>
 	</form>
+
+	<?php if (isset($_SESSION['message'])) { ?>
+		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
+	<?php } unset($_SESSION['message']); ?>
 </body>
 </html>

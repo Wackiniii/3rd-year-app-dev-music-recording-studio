@@ -18,12 +18,12 @@ require_once 'core/handleForms.php';
 	<form action="core/handleForms.php?track_id=<?php echo $_GET['track_id']; ?>
 	&album_id=<?php echo $_GET['album_id']; ?>" method="POST">
 		<p>
-			<label for="track_name">Track Name</label> 
+			<label for="track_name">Track Name*</label> 
 			<input type="text" name="track_name" 
 			value="<?php echo $getTrackByID['track_name']; ?>">
 		</p>
 		<p>
-			<label for="genre">Genre</label> 
+			<label for="genre">Genre*</label> 
 			<input type="text" name="genre" 
 			value="<?php echo $getTrackByID['genre']; ?>">
 		</p>
@@ -54,5 +54,9 @@ require_once 'core/handleForms.php';
 			<input type="reset" value="Reset">
 		</p>
 	</form>
+
+	<?php if (isset($_SESSION['message'])) { ?>
+		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
+	<?php } unset($_SESSION['message']); ?>
 </body>
 </html>
