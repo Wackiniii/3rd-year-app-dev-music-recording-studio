@@ -15,11 +15,11 @@ require_once 'core/handleForms.php';
     <form action="core/handleForms.php" method="POST">
 		<p>
 			<label for="username">Username</label>
-			<input type="text" name="username" required>
+			<input type="text" name="username">
 		</p>
 		<p>
 			<label for="password">Password</label>
-			<input type="password" name="password" id="password" required>
+			<input type="password" name="password" id="password">
             <button type="button" id="toggle" aria-pressed="false">Show</button>   
 		</p>
         <p>
@@ -28,6 +28,10 @@ require_once 'core/handleForms.php';
         </p>
 	</form>
     <p>Don't have an account yet?<a href="registration.php"> Create Account</a></p>
+    
+    <?php if (isset($_SESSION['message'])) { ?>
+		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
+	<?php } unset($_SESSION['message']); ?>
 </body>
 
 <script>
