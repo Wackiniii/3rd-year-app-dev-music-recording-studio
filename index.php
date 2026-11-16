@@ -64,7 +64,8 @@ if (!isset($_SESSION['user_id'])) {
 		<th>Release Date</th>
 	    <th>Added By</th>
 		<th>Modified By</th>
-		<th>Date_Added</th>
+		<th>Date Added</th>
+		<th>Date Modified</th>
 	    <th>Action</th>
 	  </tr>
 
@@ -81,15 +82,15 @@ if (!isset($_SESSION['user_id'])) {
 					<td><?php echo $row['added_by']; ?></td>	 
 					<td><?php echo $row['last_modified_by']; ?></td> 	
 					<td><?php echo $row['date_added']; ?></td>
+					<td><?php echo $row['date_modified']; ?></td>
 					<td>
 						<a href="viewTracks.php?album_id=<?php echo $row['album_id']; ?>">View Tracks</a>
 						<a href="editAlbum.php?album_id=<?php echo $row['album_id']; ?>">Edit</a>
 						<a href="deleteAlbum.php?album_id=<?php echo $row['album_id']; ?>">Delete</a>
 					</td>	  	
 				</tr>
-	<?php } ?>
-
-	<?php } else { ?> 
+			<?php } ?>
+		<?php } else { ?> 
 		<?php $searchAlbum = searchAlbum($pdo, $_GET['searchInput']); ?>
 			<?php foreach ($searchAlbum as $row) { ?>
 				<tr>
@@ -102,6 +103,7 @@ if (!isset($_SESSION['user_id'])) {
 					<td><?php echo $row['added_by']; ?></td>	 
 					<td><?php echo $row['last_modified_by']; ?></td> 	
 					<td><?php echo $row['date_added']; ?></td>
+					<td><?php echo $row['date_modified']; ?></td>
 					<td>
 						<a href="viewTracks.php?album_id=<?php echo $row['album_id']; ?>">View Tracks</a>
 						<a href="editAlbum.php?album_id=<?php echo $row['album_id']; ?>">Edit</a>
