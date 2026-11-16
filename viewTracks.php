@@ -50,7 +50,8 @@ require_once 'core/handleForms.php';
 	<?php } unset($_SESSION['message']); ?>
 
 	<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="GET" style="  text-align: right;">
-		<input type="text" name="searchInput" placeholder="Search Album">
+		<input type="hidden" name="album_id" value="<?php echo htmlspecialchars($_GET['album_id']); ?>">
+		<input type="text" name="searchInput" placeholder="Search Track">
 		<input type="submit" name="searchBtn" value="Search">
 	</form>
 
@@ -59,7 +60,7 @@ require_once 'core/handleForms.php';
 	    <th>Track ID</th>
 	    <th>Track Name</th>
 	    <th>Genre</th>
-	    <th>Duration in Seconds</th>
+	    <th>Duration</th>
 		<th>BPM</th>
 		<th>Key Signature</th>
 		<th>Time Signature</th>
@@ -68,31 +69,76 @@ require_once 'core/handleForms.php';
 	    <th>Added By</th>
 		<th>Modified By</th>
 		<th>Date Added</th>
+		<th>Date Modified</th>
 	    <th>Action</th>
 	  </tr>
-	  <?php $getTrackByAlbum = getTracksByAlbum($pdo, $_GET['album_id']); ?>
-	  <?php foreach ($getTrackByAlbum as $row) { ?>
-	  <tr>
-	  	<td><?php echo $row['track_id']; ?></td>	  	
-	  	<td><?php echo $row['track_name']; ?></td>	  	
-	  	<td><?php echo $row['genre']; ?></td>	  	
-	  	<td><?php echo $row['duration_seconds']; ?></td>
-		<td><?php echo $row['bpm']; ?></td>	 
-		<td><?php echo $row['key_signature']; ?></td>	 
-		<td><?php echo $row['time_signature']; ?></td>
-		<td><?php echo $row['artist_name']; ?></td>	 
-		<td><?php echo $row['producer_name']; ?></td>	 	 	 
-		<td><?php echo $row['added_by']; ?></td>
-		<td><?php echo $row['last_modified_by']; ?></td> 	
-	  	<td><?php echo $row['date_added']; ?></td>
-	  	<td>
-	  		<a href="editTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Edit</a>
-	  		<a href="deleteTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Delete</a>
-	  	</td>	  	
-	  </tr>
+
+	  <?php if (!isset($_GET['searchBtn'])) { ?>
+	  	<?php $getTracksByAlbum = getTracksByAlbum($pdo, $_GET['album_id']); ?>
+	  		<?php foreach ($getTracksByAlbum as $row) { ?>
+				<tr>
+					<td><?php echo $row['track_id']; ?></td>	  	
+					<td><?php echo $row['track_name']; ?></td>	  	
+					<td><?php echo $row['genre']; ?></td>	  	
+					<td class="duration-cell"><?php echo $row['duration_seconds']; ?></td>
+					<td><?php echo $row['bpm']; ?></td>	 
+					<td><?php echo $row['key_signature']; ?></td>	 
+					<td><?php echo $row['time_signature']; ?></td>
+					<td><?php echo $row['artist_name']; ?></td>	 
+					<td><?php echo $row['producer_name']; ?></td>	 	 	 
+					<td><?php echo $row['added_by']; ?></td>
+					<td><?php echo $row['last_modified_by']; ?></td> 	
+					<td><?php echo $row['date_added']; ?></td>
+					<td><?php echo $row['date_modified']; ?></td>
+					<td>
+						<a href="editTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Edit</a>
+						<a href="deleteTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Delete</a>
+					</td>	  	
+				</tr>
+			<?php } ?>
+		<?php } else { ?> 
+		<?php $searchTrack = searchTrack($pdo, $_GET['album_id'], $_GET['searchInput']); ?>
+			<?php foreach ($searchTrack as $row) { ?>
+				<tr>
+					<td><?php echo $row['track_id']; ?></td>	  	
+					<td><?php echo $row['track_name']; ?></td>	  	
+					<td><?php echo $row['genre']; ?></td>	  	
+					<td class="duration-cell"><?php echo $row['duration_seconds']; ?></td>
+					<td><?php echo $row['bpm']; ?></td>	 
+					<td><?php echo $row['key_signature']; ?></td>	 
+					<td><?php echo $row['time_signature']; ?></td>
+					<td><?php echo $row['artist_name']; ?></td>	 
+					<td><?php echo $row['producer_name']; ?></td>	 	 	 
+					<td><?php echo $row['added_by']; ?></td>
+					<td><?php echo $row['last_modified_by']; ?></td> 	
+					<td><?php echo $row['date_added']; ?></td>
+					<td><?php echo $row['date_modified']; ?></td>
+					<td>
+						<a href="editTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Edit</a>
+						<a href="deleteTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Delete</a>
+					</td>	  	
+				</tr>
+		<?php } ?>
 	<?php } ?>
 	</table>
 
-	
+	<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		const durationCells = document.querySelectorAll(".duration-cell");
+		
+		durationCells.forEach(cell => {
+			const totalSeconds = parseInt(cell.textContent.trim(), 10);
+			
+			if (!isNaN(totalSeconds) && totalSeconds >= 0) {
+				const minutes = Math.floor(totalSeconds / 60);
+				const seconds = totalSeconds % 60;
+				const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+				
+				cell.title = `${totalSeconds} seconds`;
+				cell.textContent = `${minutes}:${formattedSeconds}`;
+			}
+		});
+	});
+	</script>
 </body>
 </html> 
