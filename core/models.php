@@ -185,7 +185,6 @@ function getAllAlbum($pdo) {
 			FROM album
 			LEFT JOIN users AS creator ON album.added_by = creator.user_id
 			LEFT JOIN users AS modifier ON album.last_modified_by = modifier.user_id
-			
 			";
 	$stmt = $pdo->prepare($sql);
 	$executeQuery = $stmt->execute();
@@ -210,6 +209,23 @@ function getAlbumByID($pdo, $album_id) {
 
 	if ($executeQuery) {
 		return $stmt->fetch();
+	}
+}
+
+function searchAlbum($pdo, $searchQuery) {
+	$sql = "SELECT album.*, creator.username AS added_by,
+					modifier.username AS last_modified_by  
+					FROM album 
+					LEFT JOIN users AS creator ON album.added_by = creator.user_id
+					LEFT JOIN users AS modifier ON album.last_modified_by = modifier.user_id
+					WHERE
+					CONCAT(album_name, artist_name, producer_name, status, release_date)
+					LIKE ?";
+
+	$stmt = $pdo->prepare($sql);
+	$executeQuery = $stmt->execute(["%" . $searchQuery . "%"]);
+	if ($executeQuery) {
+		return $stmt->fetchAll();
 	}
 }
 
