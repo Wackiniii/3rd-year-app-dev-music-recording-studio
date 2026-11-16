@@ -36,6 +36,7 @@ CREATE TABLE track (
     key_signature VARCHAR(10),
     time_signature VARCHAR(10),
     date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
     added_by INT NOT NULL,
     last_modified_by INT,
