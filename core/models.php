@@ -219,7 +219,7 @@ function searchAlbum($pdo, $searchQuery) {
 					LEFT JOIN users AS creator ON album.added_by = creator.user_id
 					LEFT JOIN users AS modifier ON album.last_modified_by = modifier.user_id
 					WHERE
-					CONCAT(album_name, artist_name, producer_name, status, release_date)
+					CONCAT_WS(' ', album_name, artist_name, producer_name, status, release_date, creator.username, modifier.username)
 					LIKE ?";
 
 	$stmt = $pdo->prepare($sql);
@@ -289,5 +289,33 @@ function getTrackByID($pdo, $track_id) {
 		return $stmt->fetch();
 	}
 }
+// function searchTrack($pdo, $searchQuery) {
+// 	$sql = "SELECT 
+// 				track.track_id AS track_id,
+// 				track.track_name AS track_name,
+//  				track.genre AS genre,
+//  				track.duration_seconds AS duration_seconds,
+// 				track.bpm AS bpm,
+//                 track.key_signature AS key_signature,
+//                 track.time_signature AS time_signature,                
+// 				album.artist_name AS artist_name,
+//                 album.producer_name AS producer_name,
+// 				creator.username AS added_by,
+// 				modifier.username AS last_modified_by,
+//  				track.date_added AS date_added
+// 			FROM track
+//  			JOIN album ON track.album_id = album.album_id
+//  			LEFT JOIN users AS creator ON track.added_by = creator.user_id
+//             LEFT JOIN users AS modifier ON track.last_modified_by = modifier.user_id
+//  			WHERE track.album_id = ?
+//  			ORDER BY track.track_name ASC
+// 			WHERE
+// 			CONCAT_WS(' ', track_name, genre, duration_seconds, bpm, key_signature, time_signature, artist_name, producer_name, creator.username, modifier.username)
+// 			LIKE ?";
 
-?>
+// 	$stmt = $pdo->prepare($sql);
+// 	$executeQuery = $stmt->execute(["%" . $searchQuery . "%"]);
+// 	if ($executeQuery) {
+// 		return $stmt->fetchAll();
+// 	}
+// }

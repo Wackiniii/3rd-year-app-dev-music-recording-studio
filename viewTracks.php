@@ -49,7 +49,12 @@ require_once 'core/handleForms.php';
 		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
 	<?php } unset($_SESSION['message']); ?>
 
-	<table style="width:100%; margin-top: 50px;">
+	<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="GET" style="  text-align: right;">
+		<input type="text" name="searchInput" placeholder="Search Album">
+		<input type="submit" name="searchBtn" value="Search">
+	</form>
+
+	<table style="width:100%;">
 	  <tr>
 	    <th>Track ID</th>
 	    <th>Track Name</th>
