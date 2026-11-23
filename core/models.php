@@ -155,7 +155,7 @@ function updateTrack($pdo, $track_name, $genre, $duration_seconds,
                 key_signature = ?,
                 time_signature = ?,
 				last_modified_by = ?
-			WHERE track_id = ?
+			WHERE track_id = ? AND deleted_at IS NULL
 			";
 	$stmt = $pdo->prepare($sql);
 	$executeQuery = $stmt->execute([$track_name, $genre, $duration_seconds, 
@@ -166,12 +166,36 @@ function updateTrack($pdo, $track_name, $genre, $duration_seconds,
 	}
 }
 
-function deleteTrack($pdo, $track_id) {
-	$sql = "DELETE FROM track WHERE track_id = ?";
+function softDeleteTrack($pdo, $track_id, $deleted_by) {
+	$sql = "UPDATE track
+			SET deleted_at = CURRENT_TIMESTAMP,
+				deleted_by = ?
+			WHERE track_id = ? AND deleted_at IS NULL";
+	$stmt = $pdo->prepare($sql);
+	$executeQuery = $stmt->execute([$deleted_by, $track_id]);
+	if ($executeQuery) {
+		return $stmt->rowCount() > 0;
+	}
+}
+
+function restoreTrack($pdo, $track_id) {
+	$sql = "UPDATE track
+			SET deleted_at = NULL,
+				deleted_by = NULL
+			WHERE track_id = ? AND deleted_at IS NOT NULL";
 	$stmt = $pdo->prepare($sql);
 	$executeQuery = $stmt->execute([$track_id]);
 	if ($executeQuery) {
-		return true;
+		return $stmt->rowCount() > 0;
+	}
+}
+
+function deleteTrackPermanently($pdo, $track_id) {
+	$sql = "DELETE FROM track WHERE track_id = ? AND deleted_at IS NOT NULL";
+	$stmt = $pdo->prepare($sql);
+	$executeQuery = $stmt->execute([$track_id]);
+	if ($executeQuery) {
+		return $stmt->rowCount() > 0;
 	}
 }
 
@@ -251,12 +275,32 @@ function getTracksByAlbum($pdo, $album_id) {
 			JOIN album ON track.album_id = album.album_id
 			LEFT JOIN users AS creator ON track.added_by = creator.user_id
             LEFT JOIN users AS modifier ON track.last_modified_by = modifier.user_id
-			WHERE track.album_id = ?
+			WHERE track.album_id = ? AND track.deleted_at IS NULL
 			ORDER BY track.track_name ASC
 			";
 
 	$stmt = $pdo->prepare($sql);
 	$executeQuery = $stmt->execute([$album_id]);
+	if ($executeQuery) {
+		return $stmt->fetchAll();
+	}
+}
+
+function getAllDeletedTracks($pdo) {
+	$sql = "SELECT
+				track.track_id,
+				track.track_name,
+				track.genre,
+				track.deleted_at,
+				album.album_name,
+				deleter.username AS deleted_by
+			FROM track
+			JOIN album ON track.album_id = album.album_id
+			LEFT JOIN users AS deleter ON track.deleted_by = deleter.user_id
+			WHERE track.deleted_at IS NOT NULL
+			ORDER BY track.deleted_at DESC";
+	$stmt = $pdo->prepare($sql);
+	$executeQuery = $stmt->execute();
 	if ($executeQuery) {
 		return $stmt->fetchAll();
 	}
@@ -280,7 +324,7 @@ function getTrackByID($pdo, $track_id) {
 			JOIN album ON track.album_id = album.album_id
 			LEFT JOIN users AS creator ON track.added_by = creator.user_id
             LEFT JOIN users AS modifier ON track.last_modified_by = modifier.user_id
-			WHERE track.track_id  = ? 
+			WHERE track.track_id = ? AND track.deleted_at IS NULL
 			ORDER BY track.track_name ASC
 			";
 
@@ -310,6 +354,7 @@ function searchTrack($pdo, $album_id, $searchQuery) {
  			LEFT JOIN users AS creator ON track.added_by = creator.user_id
             LEFT JOIN users AS modifier ON track.last_modified_by = modifier.user_id
  			WHERE track.album_id = ? 
+				AND track.deleted_at IS NULL
 				AND CONCAT_WS(' ', track_name, genre, duration_seconds, bpm, key_signature, time_signature, artist_name, producer_name, creator.username, modifier.username)
  			LIKE ?
 			ORDER BY track.track_name ASC";

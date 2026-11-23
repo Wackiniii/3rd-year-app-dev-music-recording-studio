@@ -211,15 +211,49 @@ if (isset($_POST['editTrackBtn'])) {
 }
 
 if (isset($_POST['deleteTrackBtn'])) {
-	$query = deleteTrack($pdo, $_GET['track_id']);
+	if (!isset($_SESSION['user_id'])) {
+		header("Location: ../login.php");
+		exit;
+	}
+
+	$query = softDeleteTrack($pdo, $_GET['track_id'], $_SESSION['user_id']);
 
 	if ($query) {
+		$_SESSION['message'] = "Track moved to trash.";
 		header("Location: ../viewTracks.php?album_id=" .$_GET['album_id']);
 		exit;
 	}
 	else {
-		echo "Deletion failed";
+		$_SESSION['message'] = "Track could not be moved to trash.";
+		header("Location: ../viewTracks.php?album_id=" .$_GET['album_id']);
+		exit;
 	}
+}
+
+if (isset($_POST['restoreTrackBtn'])) {
+	if (!isset($_SESSION['user_id'])) {
+		header("Location: ../login.php");
+		exit;
+	}
+
+	$query = restoreTrack($pdo, $_GET['track_id']);
+	$_SESSION['message'] = $query ? "Track restored." : "Track could not be restored.";
+	header("Location: ../viewTrash.php");
+	exit;
+}
+
+if (isset($_POST['deleteTrackPermanentlyBtn'])) {
+	if (!isset($_SESSION['user_id'])) {
+		header("Location: ../login.php");
+		exit;
+	}
+
+	$query = deleteTrackPermanently($pdo, $_GET['track_id']);
+	$_SESSION['message'] = $query
+		? "Track permanently deleted."
+		: "Track could not be permanently deleted.";
+	header("Location: ../viewTrash.php");
+	exit;
 }
 
 

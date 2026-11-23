@@ -1,6 +1,11 @@
 <?php 
 require_once 'core/models.php'; 
 require_once 'core/handleForms.php'; 
+
+if (!isset($_SESSION['user_id'])) {
+	header("Location: login.php");
+	exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,7 +97,7 @@ require_once 'core/handleForms.php';
 					<td><?php echo $row['date_modified']; ?></td>
 					<td>
 						<a href="editTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Edit</a>
-						<a href="deleteTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Delete</a>
+						<a href="deleteTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Move to Trash</a>
 					</td>	  	
 				</tr>
 			<?php } ?>
@@ -115,12 +120,14 @@ require_once 'core/handleForms.php';
 					<td><?php echo $row['date_modified']; ?></td>
 					<td>
 						<a href="editTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Edit</a>
-						<a href="deleteTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Delete</a>
+						<a href="deleteTracks.php?track_id=<?php echo $row['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>">Move to Trash</a>
 					</td>	  	
 				</tr>
 		<?php } ?>
 	<?php } ?>
 	</table>
+
+	<p>	<a href="viewTrash.php">View Trash</a></p>
 
 	<script>
 	document.addEventListener("DOMContentLoaded", () => {
