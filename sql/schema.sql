@@ -40,12 +40,14 @@ CREATE TABLE track (
     time_signature VARCHAR(10),
     date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     date_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL DEFAULT NULL,
 
     added_by INT NOT NULL,
     last_modified_by INT,
+    deleted_by INT NULL,
 
     FOREIGN KEY (album_id) REFERENCES album(album_id) ON DELETE CASCADE,
     FOREIGN KEY (added_by) REFERENCES users(user_id) ON DELETE RESTRICT,
-    FOREIGN KEY (last_modified_by) REFERENCES users(user_id) ON DELETE SET NULL
+    FOREIGN KEY (last_modified_by) REFERENCES users(user_id) ON DELETE SET NULL,
+    FOREIGN KEY (deleted_by) REFERENCES users(user_id) ON DELETE SET NULL
 );
-
