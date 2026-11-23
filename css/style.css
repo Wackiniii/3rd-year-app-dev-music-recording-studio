@@ -16,3 +16,15 @@ a:hover {
 input {
     padding: 3px;
 }
+
+.style-button {
+    background: none;
+    border: none;
+    color: green;
+    padding: 0;
+    margin: 10px;
+}
+
+.style-button:hover {
+    color: #33c433;
+}
