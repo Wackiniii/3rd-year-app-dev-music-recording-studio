@@ -47,7 +47,7 @@ require_once 'core/handleForms.php';
 			<button type="button" id="toggle" aria-pressed="false">Show</button>   
         </p>
         <p>
-            <input type="submit" name="registerBtn">
+            <input type="submit" name="registerBtn" value="Register">
             <input type="reset" value="Reset">
         </p>
         <?php 
