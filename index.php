@@ -57,7 +57,6 @@ if (!isset($_SESSION['user_id'])) {
 
 	<table style="width:100%;">
 	  <tr>
-	    <th>Album ID</th>
 		<th>Album Name</th>
 	    <th>Artist Name</th>
 	    <th>Producer Name</th>
@@ -73,8 +72,7 @@ if (!isset($_SESSION['user_id'])) {
 	  <?php if (!isset($_GET['searchBtn'])) { ?>
 	  	<?php $getAllAlbum = getAllAlbum($pdo); ?>
 	  		<?php foreach ($getAllAlbum as $row) { ?>
-				<tr>
-					<td><?php echo $row['album_id']; ?></td>	  	
+				<tr>	
 					<td><?php echo $row['album_name']; ?></td>	  	
 					<td><?php echo $row['artist_name']; ?></td>	  	
 					<td><?php echo $row['producer_name']; ?></td>	  	

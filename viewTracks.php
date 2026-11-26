@@ -60,7 +60,6 @@ if (!isset($_SESSION['user_id'])) {
 
 	<table style="width:100%;">
 	  <tr>
-	    <th>Track ID</th>
 	    <th>Track Name</th>
 	    <th>Genre</th>
 	    <th>Duration</th>
@@ -79,8 +78,7 @@ if (!isset($_SESSION['user_id'])) {
 	  <?php if (!isset($_GET['searchBtn'])) { ?>
 	  	<?php $getTracksByAlbum = getTracksByAlbum($pdo, $_GET['album_id']); ?>
 	  		<?php foreach ($getTracksByAlbum as $row) { ?>
-				<tr>
-					<td><?php echo $row['track_id']; ?></td>	  	
+				<tr> 	
 					<td><?php echo $row['track_name']; ?></td>	  	
 					<td><?php echo $row['genre']; ?></td>	  	
 					<td class="duration-cell"><?php echo $row['duration_seconds']; ?></td>

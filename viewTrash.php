@@ -26,7 +26,7 @@ $deletedTracks = getAllDeletedTracks($pdo);
 	<?php unset($_SESSION['message']); } ?>
 
 	<table style="width:100%;">
-		<tr style="text-align: left;">
+		<tr>
 			<th>Track Name</th>
 			<th>Genre</th>
 			<th>Album</th>
