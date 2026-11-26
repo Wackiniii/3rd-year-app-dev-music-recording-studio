@@ -33,11 +33,11 @@ require_once 'core/handleForms.php';
         <p>
 			<label for="release_date">Release Date</label> 
 			<input type="date" name="release_date" value="<?php echo $getAlbumByID['release_date']; ?>">
+			<input type="reset" value="Reset">
 		</p>
 		<p>
 			<input type="button" value="Go Back" onclick="history.back()">
             <input type="submit" name="editAlbumBtn">
-			<input type="reset" value="Reset">
 		</p>
 	</form>
 

@@ -1,6 +1,13 @@
 body {
+    font-family: system-ui;
     background-color: rgb(29, 29, 29);
     color: white;
+}
+
+.container {
+    border-style: solid;
+    height: auto;
+    margin-bottom: 5px;
 }
 
 a {
@@ -20,11 +27,20 @@ input {
 .style-button {
     background: none;
     border: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
     color: green;
     padding: 0;
-    margin: 10px;
+    margin: 5px 5px;
 }
 
 .style-button:hover {
     color: #33c433;
+}
+
+.wrap-background {
+    color: white; /* Ensure contrast */
+    background-color: rgba(0, 128, 0, 0.593);
+    padding: 5px 5px; /* Optional spacing */
 }

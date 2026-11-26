@@ -17,6 +17,9 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
 	<a href="index.php">Return to home</a>
+	<?php if (isset($_SESSION['message'])) { ?>
+		<h1 class="wrap-background"><?php echo $_SESSION['message']; ?></h1>
+	<?php } unset($_SESSION['message']); ?>
 	<?php $getAlbumByID = getAlbumByID($pdo, $_GET['album_id']); ?>
 	<h1>Album Name: <?php echo $getAlbumByID['album_name']; ?></h1>
 	<h1>Add New Track</h1>
@@ -48,11 +51,6 @@ if (!isset($_SESSION['user_id'])) {
 			<input type="reset" value="Reset">
 		</p>
 	</form>
-
-	
-	<?php if (isset($_SESSION['message'])) { ?>
-		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
-	<?php } unset($_SESSION['message']); ?>
 
 	<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="GET" style="  text-align: right;">
 		<input type="hidden" name="album_id" value="<?php echo htmlspecialchars($_GET['album_id']); ?>">

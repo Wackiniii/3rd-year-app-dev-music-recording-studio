@@ -11,8 +11,10 @@ require_once 'core/handleForms.php';
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<a href="viewTracks.php?album_id=<?php echo $_GET['album_id']; ?>">
-	View Tracks:</a>
+	<?php if (isset($_SESSION['message'])) { ?>
+	<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
+	<?php } unset($_SESSION['message']); ?>
+
 	<h1>Edit the track</h1>
 	<?php $getTrackByID = getTrackByID($pdo, $_GET['track_id']); ?>
 	<form action="core/handleForms.php?track_id=<?php echo $_GET['track_id']; ?>
@@ -46,17 +48,13 @@ require_once 'core/handleForms.php';
 			<label for="time_signature">Time Signature</label> 
 			<input type="text" name="time_signature" 
 			value="<?php echo $getTrackByID['time_signature']; ?>">
+			<input type="reset" value="Reset">
 
 		</p>
 		<p>
 			<input type="button" value="Go Back" onclick="history.back()">
             <input type="submit" name="editTrackBtn">
-			<input type="reset" value="Reset">
 		</p>
 	</form>
-
-	<?php if (isset($_SESSION['message'])) { ?>
-		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
-	<?php } unset($_SESSION['message']); ?>
 </body>
 </html>

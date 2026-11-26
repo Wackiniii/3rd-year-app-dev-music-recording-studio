@@ -249,9 +249,13 @@ if (isset($_POST['deleteTrackPermanentlyBtn'])) {
 	}
 
 	$query = deleteTrackPermanently($pdo, $_GET['track_id']);
-	$_SESSION['message'] = $query
-		? "Track permanently deleted."
-		: "Track could not be permanently deleted.";
+
+	if ($query) {
+		$_SESSION['message'] = "Track permanently deleted.";
+	}
+	else {
+		$_SESSION['message'] = "Track could not be permanently deleted.";
+	}
 	header("Location: ../viewTrash.php");
 	exit;
 }

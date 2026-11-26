@@ -18,6 +18,11 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
 	<a href="core/handleForms.php?logout=true">Logout</a>
+
+	<?php if (isset($_SESSION['message'])) { ?>
+		<h1 class="wrap-background"><?php echo $_SESSION['message']; ?></h1>
+	<?php } unset($_SESSION['message']); ?>
+
 	<h1>Welcome To Music Recording Studio System</h1>
     <p>Insert the following table: </p>
 	<form action="core/handleForms.php" method="POST">
@@ -44,10 +49,6 @@ if (!isset($_SESSION['user_id'])) {
 			<input type="reset" value="Reset">
 		</p>
 	</form>
-
-	<?php if (isset($_SESSION['message'])) { ?>
-		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
-	<?php } unset($_SESSION['message']); ?>
 
 	<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="GET" style="  text-align: right;">
 		<input type="text" name="searchInput" placeholder="Search Album">

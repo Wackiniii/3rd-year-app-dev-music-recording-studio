@@ -18,7 +18,7 @@ $deletedTracks = getAllDeletedTracks($pdo);
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<a href="index.php">Return to home</a>
+	<a href="viewTracks.php?album_id=1">Return to Album</a>
 	<h1>Trashed Tracks</h1>
 
 	<?php if (isset($_SESSION['message'])) { ?>
@@ -39,7 +39,7 @@ $deletedTracks = getAllDeletedTracks($pdo);
 				<td><?php echo htmlspecialchars($row['track_name']); ?></td>
 				<td><?php echo htmlspecialchars($row['genre']); ?></td>
 				<td><?php echo htmlspecialchars($row['album_name']); ?></td>
-				<td><?php echo htmlspecialchars($row['deleted_by'] ?? 'Unknown'); ?></td>
+				<td><?php echo htmlspecialchars($row['deleted_by']); ?></td>
 				<td><?php echo htmlspecialchars($row['deleted_at']); ?></td>
 				<td>
 					<form action="core/handleForms.php?track_id=<?php echo $row['track_id']; ?>" method="POST" style="display:inline;">

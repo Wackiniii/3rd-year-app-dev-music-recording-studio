@@ -11,6 +11,10 @@ require_once 'core/handleForms.php';
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <?php if (isset($_SESSION['message'])) { ?>
+		<h1 class="wrap-background"><?php echo $_SESSION['message']; ?></h1>
+	<?php } unset($_SESSION['message']); ?>
+
     <h1>Registration Form</h1>
     <form action="core/handleForms.php" method="POST">
 		<p>
@@ -52,10 +56,6 @@ require_once 'core/handleForms.php';
 	</form>
     
 	<p>Already have an account?<a href="login.php"> Login Account</a></p>
-
-    <?php if (isset($_SESSION['message'])) { ?>
-		<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
-	<?php } unset($_SESSION['message']); ?>
 </body>
 
 <script>
