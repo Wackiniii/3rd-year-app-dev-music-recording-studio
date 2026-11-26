@@ -11,9 +11,10 @@ body {
 }
 
 .wrap-background {
-    color: white; /* Ensure contrast */
-    background-color: rgba(0, 128, 0, 0.593);
-    padding: 5px 5px; /* Optional spacing */
+    font-size: 1rem;
+    color: white;
+    background-color: rgba(0, 128, 0, 0.689);
+    padding: 5px 5px;
 }
 
 .style-button {
