@@ -1,6 +1,6 @@
 body {
     font-family: system-ui;
-    background-color: rgb(29, 29, 29);
+    background-color: #1d1d1d;
     color: white;
 }
 
@@ -13,7 +13,7 @@ body {
 .wrap-background {
     font-size: 1rem;
     color: white;
-    background-color: rgba(0, 128, 0, 0.689);
+    background-color: #008000b0;
     padding: 5px 5px;
 }
 
@@ -32,8 +32,23 @@ body {
     color: #33c433;
 }
 
-table tr {
+table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+table th,
+table td {
+    padding: 10px 12px;
+}
+
+table th {
+    background-color: #252525;
     text-align: left;
+}
+
+table tr {
+    background-color: #383838bc;
 }
 
 a {
