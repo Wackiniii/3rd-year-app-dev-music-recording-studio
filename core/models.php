@@ -127,7 +127,7 @@ function insertTrack($pdo, $track_name, $genre, $duration_seconds,
 	$executeQuery = $stmt->execute([$track_name, $genre, $duration_seconds, 
                                 $bpm, $key_signature, $time_signature, $added_by, $album_id]);
 	if ($executeQuery) {
-		return true;
+		return $pdo->lastInsertId();
 	}
 
 }
@@ -259,14 +259,13 @@ function getTracksByAlbum($pdo, $album_id) {
 	
 	$sql = "SELECT 
 				track.track_id AS track_id,
+				images.images_name AS images_name,
 				track.track_name AS track_name,
 				track.genre AS genre,
 				track.duration_seconds AS duration_seconds,
 				track.bpm AS bpm,
                 track.key_signature AS key_signature,
                 track.time_signature AS time_signature,                
-				album.artist_name AS artist_name,
-                album.producer_name AS producer_name,
 				creator.username AS added_by,
 				modifier.username AS last_modified_by,
 				track.date_added AS date_added,
@@ -275,6 +274,7 @@ function getTracksByAlbum($pdo, $album_id) {
 			JOIN album ON track.album_id = album.album_id
 			LEFT JOIN users AS creator ON track.added_by = creator.user_id
             LEFT JOIN users AS modifier ON track.last_modified_by = modifier.user_id
+			LEFT JOIN images ON images.track_id = track.track_id
 			WHERE track.album_id = ? AND track.deleted_at IS NULL
 			ORDER BY track.track_name ASC
 			";
@@ -309,6 +309,9 @@ function getAllDeletedTracks($pdo) {
 function getTrackByID($pdo, $track_id) {
 	$sql = "SELECT 
 				track.track_id AS track_id,
+				images.images_id AS images_id,
+				images.images_name AS images_name,
+				images.description AS image_description,
 				track.track_name AS track_name,
 				track.genre AS genre,
 				track.duration_seconds AS duration_seconds,
@@ -316,14 +319,12 @@ function getTrackByID($pdo, $track_id) {
                 track.key_signature AS key_signature,
                 track.time_signature AS time_signature,
                 track.date_added AS date_added,
-				album.artist_name AS artist_name,
-                album.producer_name AS producer_name,
 				creator.username AS added_by,
 				modifier.username AS last_modified_by
 			FROM track
-			JOIN album ON track.album_id = album.album_id
 			LEFT JOIN users AS creator ON track.added_by = creator.user_id
             LEFT JOIN users AS modifier ON track.last_modified_by = modifier.user_id
+			LEFT JOIN images ON images.track_id = track.track_id
 			WHERE track.track_id = ? AND track.deleted_at IS NULL
 			ORDER BY track.track_name ASC
 			";
@@ -343,14 +344,12 @@ function searchTrack($pdo, $album_id, $searchQuery) {
 				track.bpm AS bpm,
                 track.key_signature AS key_signature,
                 track.time_signature AS time_signature,                
-				album.artist_name AS artist_name,
-                album.producer_name AS producer_name,
 				creator.username AS added_by,
 				modifier.username AS last_modified_by,
 				track.date_added AS date_added,
 				track.date_modified AS date_modified
 			FROM track
- 			JOIN album ON track.album_id = album.album_id
+			JOIN album ON track.album_id = album.album_id
  			LEFT JOIN users AS creator ON track.added_by = creator.user_id
             LEFT JOIN users AS modifier ON track.last_modified_by = modifier.user_id
  			WHERE track.album_id = ? 
@@ -363,5 +362,69 @@ function searchTrack($pdo, $album_id, $searchQuery) {
 	$executeQuery = $stmt->execute([$album_id, "%" . $searchQuery . "%"]);
 	if ($executeQuery) {
 		return $stmt->fetchAll();
+	}
+}
+
+// ===================================================================================
+
+function insertImages($pdo, $images_name, $username, $description, $images_id=null, $track_id=null) {
+	if (empty($images_id)) {
+		$sql = "INSERT INTO images (images_name, username, description, track_id) VALUES (?,?,?,?)";
+		$stmt = $pdo->prepare($sql);
+		$executeQuery = $stmt->execute([$images_name, $username, $description, $track_id]);
+
+		if ($executeQuery) {
+			return true;
+		}
+	}
+	else {
+		$sql = "UPDATE images SET images_name = ?, description = ?, track_id = ? WHERE images_id = ?";
+		$stmt = $pdo->prepare($sql);
+		$executeQuery = $stmt->execute([$images_name, $description, $track_id, $images_id]);
+
+		if ($executeQuery) {
+			return true;
+		}
+	}
+}
+
+function deleteImages($pdo, $images_id) {
+	$sql = "DELETE FROM images WHERE images_id = ?";
+	$stmt = $pdo->prepare($sql);
+	$executeQuery = $stmt->execute([$images_id]);
+
+	if ($executeQuery) {
+		return true;
+	}
+}
+
+function getAllImages($pdo, $username=null) {
+	if (empty($username)) {
+		$sql = "SELECT * from images ORDER BY date_added DESC";
+		$stmt = $pdo->prepare($sql);
+		$executeQuery = $stmt->execute();
+
+		if ($executeQuery) {
+			return $stmt->fetchAll();
+		}
+	}
+	else {
+		$sql = "SELECT * FROM images WHERE username = ? ORDER BY date_added DESC";
+		$stmt = $pdo->prepare($sql);
+		$executeQuery = $stmt->execute([$username]);
+
+		if ($executeQuery) {
+			return $stmt->fetchAll();
+		}
+	}
+}
+
+function getImagesByID($pdo, $images_id) {
+	$sql = "SELECT * FROM images WHERE images_id = ?";
+	$stmt = $pdo->prepare($sql);
+	$executeQuery = $stmt->execute([$images_id]);
+
+	if ($executeQuery) {
+		return $stmt->fetch();
 	}
 }
