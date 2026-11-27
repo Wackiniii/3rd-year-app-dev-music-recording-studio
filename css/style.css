@@ -44,11 +44,11 @@ table td {
 
 table th {
     background-color: #252525;
-    text-align: left;
 }
 
 table tr {
     background-color: #383838bc;
+    text-align: center;
 }
 
 a {
