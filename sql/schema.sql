@@ -51,3 +51,14 @@ CREATE TABLE track (
     FOREIGN KEY (last_modified_by) REFERENCES users(user_id) ON DELETE SET NULL,
     FOREIGN KEY (deleted_by) REFERENCES users(user_id) ON DELETE SET NULL
 );
+
+CREATE TABLE images (
+    images_id INT AUTO_INCREMENT PRIMARY KEY,
+    track_id INT NOT NULL,
+    images_name TEXT,
+    username VARCHAR(255),
+    description VARCHAR(255),
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (track_id) REFERENCES track(track_id) ON DELETE CASCADE
+);
