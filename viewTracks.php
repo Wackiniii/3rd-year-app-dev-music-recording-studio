@@ -17,16 +17,27 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
 	<a href="index.php">Return to home</a>
+	
 	<?php if (isset($_SESSION['message'])) { ?>
-		<h1 class="wrap-background"><?php echo $_SESSION['message']; ?></h1>
+	<h1 class="wrap-background"><?php echo $_SESSION['message']; ?></h1>
 	<?php } unset($_SESSION['message']); ?>
+	
 	<?php $getAlbumByID = getAlbumByID($pdo, $_GET['album_id']); ?>
 	<h1>Album Name: <?php echo $getAlbumByID['album_name']; ?></h1>
 	<h1>Add New Track</h1>
-	<form action="core/handleForms.php?album_id=<?php echo $_GET['album_id']; ?>" method="POST">
+
+	<form action="core/handleForms.php?album_id=<?php echo $_GET['album_id']; ?>" method="POST" enctype="multipart/form-data">
 		<p>
 			<label for="track_name">Track Name*</label> 
 			<input type="text" name="track_name">
+		</p>
+		<p>
+			<label for="image">Track Image</label>
+			<input type="file" id="image" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
+		</p>
+		<p>
+			<label for="image_description">Image Description</label>
+			<input type="text" id="image_description" name="image_description">
 		</p>
 		<p>
 			<label for="genre">Genre*</label> 
@@ -60,14 +71,13 @@ if (!isset($_SESSION['user_id'])) {
 
 	<table style="width:100%;">
 	  <tr>
+		<th>Track Icon</th>
 	    <th>Track Name</th>
 	    <th>Genre</th>
 	    <th>Duration</th>
 		<th>BPM</th>
 		<th>Key Signature</th>
 		<th>Time Signature</th>
-		<th>Artist Name</th>
-		<th>Producer Name</th>
 	    <th>Added By</th>
 		<th>Modified By</th>
 		<th>Date Added</th>
@@ -78,15 +88,22 @@ if (!isset($_SESSION['user_id'])) {
 	  <?php if (!isset($_GET['searchBtn'])) { ?>
 	  	<?php $getTracksByAlbum = getTracksByAlbum($pdo, $_GET['album_id']); ?>
 	  		<?php foreach ($getTracksByAlbum as $row) { ?>
-				<tr> 	
+				<tr>
+					<td>
+						<?php if (!empty($row['images_name'])) { ?>
+							<img
+								src="uploads/<?php echo htmlspecialchars($row['images_name']); ?>"
+								alt="Track image"
+								width="80"
+							>
+						<?php } ?>
+					</td>
 					<td><?php echo $row['track_name']; ?></td>	  	
 					<td><?php echo $row['genre']; ?></td>	  	
 					<td class="duration-cell"><?php echo $row['duration_seconds']; ?></td>
 					<td><?php echo $row['bpm']; ?></td>	 
 					<td><?php echo $row['key_signature']; ?></td>	 
-					<td><?php echo $row['time_signature']; ?></td>
-					<td><?php echo $row['artist_name']; ?></td>	 
-					<td><?php echo $row['producer_name']; ?></td>	 	 	 
+					<td><?php echo $row['time_signature']; ?></td> 	 	 
 					<td><?php echo $row['added_by']; ?></td>
 					<td><?php echo $row['last_modified_by']; ?></td> 	
 					<td><?php echo $row['date_added']; ?></td>
@@ -107,9 +124,7 @@ if (!isset($_SESSION['user_id'])) {
 					<td class="duration-cell"><?php echo $row['duration_seconds']; ?></td>
 					<td><?php echo $row['bpm']; ?></td>	 
 					<td><?php echo $row['key_signature']; ?></td>	 
-					<td><?php echo $row['time_signature']; ?></td>
-					<td><?php echo $row['artist_name']; ?></td>	 
-					<td><?php echo $row['producer_name']; ?></td>	 	 	 
+					<td><?php echo $row['time_signature']; ?></td>	 	 
 					<td><?php echo $row['added_by']; ?></td>
 					<td><?php echo $row['last_modified_by']; ?></td> 	
 					<td><?php echo $row['date_added']; ?></td>
@@ -123,7 +138,7 @@ if (!isset($_SESSION['user_id'])) {
 	<?php } ?>
 	</table>
 
-	<p>	<a href="viewTrash.php">View Trash</a></p>
+	<p>	<a href="viewTrash.php?album_id=<?php echo $_GET['album_id']; ?>">View Trash</a></p>
 
 	<script>
 	document.addEventListener("DOMContentLoaded", () => {
