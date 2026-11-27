@@ -91,11 +91,7 @@ if (!isset($_SESSION['user_id'])) {
 				<tr>
 					<td>
 						<?php if (!empty($row['images_name'])) { ?>
-							<img
-								src="uploads/<?php echo htmlspecialchars($row['images_name']); ?>"
-								alt="Track image"
-								width="80"
-							>
+							<img src="uploads/<?php echo htmlspecialchars($row['images_name']); ?>" alt="Track image" width="80">
 						<?php } ?>
 					</td>
 					<td><?php echo $row['track_name']; ?></td>	  	

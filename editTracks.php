@@ -11,18 +11,37 @@ require_once 'core/handleForms.php';
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<?php if (isset($_SESSION['message'])) { ?>
-	<h1 style="color: green;"><?php echo $_SESSION['message']; ?></h1>
-	<?php } unset($_SESSION['message']); ?>
-
 	<h1>Edit the track</h1>
 	<?php $getTrackByID = getTrackByID($pdo, $_GET['track_id']); ?>
+
+	<?php if (!empty($getTrackByID['images_id'])) { ?>
+		<form action="core/handleForms.php?track_id=<?php echo $_GET['track_id']; ?>&album_id=<?php echo $_GET['album_id']; ?>"
+			method="POST">
+			<input type="hidden" name="images_id" value="<?php echo $getTrackByID['images_id']; ?>">
+			<button type="submit" name="deleteImagesBtn" onclick="return confirm('Delete this image?');">Delete image</button>
+		</form>
+	<?php } ?>
+
 	<form action="core/handleForms.php?track_id=<?php echo $_GET['track_id']; ?>
-	&album_id=<?php echo $_GET['album_id']; ?>" method="POST">
+	&album_id=<?php echo $_GET['album_id']; ?>" method="POST" enctype="multipart/form-data">
+		
+		<?php if (!empty($getTrackByID['images_name'])) { ?>
+			<img src="uploads/<?php echo htmlspecialchars($getTrackByID['images_name']); ?>" alt="Current track image" width="120">
+			<input type="hidden" name="images_id" value="<?php echo $getTrackByID['images_id']; ?>">
+		<?php } ?>
+
 		<p>
 			<label for="track_name">Track Name*</label> 
 			<input type="text" name="track_name" 
 			value="<?php echo $getTrackByID['track_name']; ?>">
+		</p>
+		<p>
+			<label for="image">Replace image?</label>
+			<input type="file" id="image" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
+		</p>
+		<p>
+			<label for="image_description">Image Description</label>
+			<input type="text" id="image_description" name="image_description" value="<?php echo htmlspecialchars($getTrackByID['image_description'] ?? ''); ?>">
 		</p>
 		<p>
 			<label for="genre">Genre*</label> 
